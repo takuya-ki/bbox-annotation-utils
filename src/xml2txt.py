@@ -4,8 +4,8 @@ from __future__ import print_function
 
 import os
 import cv2
+import glob
 import os.path as osp
-from glob import glob
 from lxml import etree
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element, SubElement
@@ -13,8 +13,6 @@ from xml.etree.ElementTree import Element, SubElement
 
 class PascalVocReader:
     def __init__(self, filepath):
-        # shapes type:
-        # [labbel, [(x1,y1), (x2,y2), (x3,y3), (x4,y4)], color, color, difficult]
         self.shapes = []
         self.filepath = filepath
         self.verified = False
@@ -74,7 +72,7 @@ if __name__ == '__main__':
     if osp.isfile(classes_txt_path):
         with open(classes_txt_path, "r") as f:
             class_list = f.read().strip().split()
-            classes = {k : v for (v, k) in enumerate(class_list)}
+            classes = {k: v for (v, k) in enumerate(class_list)}
     os.makedirs(txtdirpath, exist_ok=True)
 
     xmlPaths = glob(xmlpath + "/*.xml")
@@ -86,8 +84,9 @@ if __name__ == '__main__':
             for shape in shapes:
                 class_name = shape[0]
                 box = shape[1]
-                filename = osp.splitext(
-                    osp.join(imgdirpath, osp.basename(xmlPath)[:-4]))[0] +'.'+ imgext
+                filename = osp.splitext(osp.join(
+                    imgdirpath,
+                    osp.basename(xmlPath)[:-4]))[0] + '.' + imgext
 
                 if class_name not in classes.keys():
                     classes[class_name] = num_classes
@@ -104,7 +103,8 @@ if __name__ == '__main__':
                 w = float((coord_max[0] - coord_min[0])) / width
                 h = float((coord_max[1] - coord_min[1])) / height
 
-                f.write("%d %.06f %.06f %.06f %.06f\n" % (class_idx, xcen, ycen, w, h))
+                f.write("%d %.06f %.06f %.06f %.06f\n"
+                        % (class_idx, xcen, ycen, w, h))
                 print(class_idx, xcen, ycen, w, h)
 
     with open(osp.join(datasetpath, "class_found.txt"), "w") as f:

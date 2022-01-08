@@ -38,13 +38,13 @@ def create_object_annotation(root, voc_labels):
 def create_file(file_prefix, width, height, voc_labels):
     root = create_root(file_prefix, width, height)
     root = create_object_annotation(root, voc_labels)
-    
     save_xml_path = "{}/{}.xml".format(xmlpath, file_prefix)
     # tree = ET.ElementTree(root)
     # tree.write(save_xml_path)
 
     xml_string = ET.tostring(root, 'utf-8')
-    pretty_string = minidom.parseString(xml_string).toprettyxml(indent=' ', encoding='utf-8')
+    pretty_string = minidom.parseString(
+        xml_string).toprettyxml(indent=' ', encoding='utf-8')
 
     with open(save_xml_path, mode='wb') as f:
         f.write(pretty_string)
@@ -62,7 +62,7 @@ def read_file(file_path):
     with open(prueba) as file:
         lines = file.readlines()
         voc_labels = []
-        for line in lines:	
+        for line in lines:
             voc = []
             line = line.strip()
             data = line.split()
@@ -82,7 +82,7 @@ def read_file(file_path):
 
 if __name__ == "__main__":
 
-    imgchnls = 3 # RGB:3, Grayscale:1
+    imgchnls = 3  # RGB:3, Grayscale:1
     classes = dict()
 
     imgext = 'jpg'
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     if osp.isfile(classes_txt_path):
         with open(classes_txt_path, "r") as f:
             class_list = f.read().strip().split()
-            classes = {str(k) : v for (k, v) in enumerate(class_list)}
+            classes = {str(k): v for (k, v) in enumerate(class_list)}
     os.makedirs(xmlpath, exist_ok=True)
     for filename in os.listdir(txtpath):
         if filename.endswith('txt'):
@@ -108,7 +108,6 @@ if __name__ == "__main__":
             print(PathFileName)
             if os.stat(PathFileName).st_size > 0:
                 print(filename)
-                read_file(filename)  
+                read_file(filename)
         else:
             print("Skipping file: {}".format(filename))
-
