@@ -5,13 +5,14 @@ Tools for annotation of 2d object detection.
 ## Requirements
 
 - Python 3.7.3
-  - lxml 4.5.0
-  - Pillow 7.0.0
-  - opencv-python 3.4.9.33
+  - lxml 4.3.2
+  - Pillow 8.4.0
+  - opencv-python 4.5.1.48
 
 ## Installation
 
     $ git clone git@github.com:takuya-ki/bbox-annotation-utils.git  
+    $ pip install -r requirements.txt
 
 ## Usage
 
