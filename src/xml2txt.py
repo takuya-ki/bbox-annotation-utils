@@ -60,7 +60,7 @@ if __name__ == '__main__':
     imgext = 'jpg'
     datasetpath = osp.join(
         osp.dirname(__file__), "..", "dataset")
-    xmlpath = osp.join(
+    xmldirpath = osp.join(
         datasetpath, "xml")
     imgdirpath = osp.join(
         datasetpath, imgext)
@@ -75,7 +75,7 @@ if __name__ == '__main__':
             classes = {k: v for (v, k) in enumerate(class_list)}
     os.makedirs(txtdirpath, exist_ok=True)
 
-    xmlPaths = glob(xmlpath + "/*.xml")
+    xmlPaths = glob.glob(osp.join(xmldirpath, "*.xml"))
     for xmlPath in xmlPaths:
         tVocParseReader = PascalVocReader(xmlPath)
         shapes = tVocParseReader.getShapes()
@@ -105,7 +105,6 @@ if __name__ == '__main__':
 
                 f.write("%d %.06f %.06f %.06f %.06f\n"
                         % (class_idx, xcen, ycen, w, h))
-                print(class_idx, xcen, ycen, w, h)
 
     with open(osp.join(datasetpath, "class_found.txt"), "w") as f:
         for key in classes.keys():

@@ -5,7 +5,7 @@ Tools for annotation of 2d object detection.
 ## Requirements
 
 - Python 3.7.3
-  - lxml 4.3.2
+  - lxml 4.7.0
   - Pillow 8.4.0
   - opencv-python 4.5.1.48
 

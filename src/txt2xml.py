@@ -12,7 +12,7 @@ import xml.etree.cElementTree as ET
 
 def create_root(file_prefix, width, height):
     root = ET.Element("annotations")
-    ET.SubElement(root, "filename").text = "{}.{}".format(file_prefix, imgext)
+    ET.SubElement(root, "filename").text = file_prefix + '.' + imgext
     size = ET.SubElement(root, "size")
     ET.SubElement(size, "width").text = str(width)
     ET.SubElement(size, "height").text = str(height)
@@ -38,7 +38,7 @@ def create_object_annotation(root, voc_labels):
 def create_file(file_prefix, width, height, voc_labels):
     root = create_root(file_prefix, width, height)
     root = create_object_annotation(root, voc_labels)
-    save_xml_path = "{}/{}.xml".format(xmlpath, file_prefix)
+    save_xml_path = osp.join(xmldirpath, file_prefix+".xml")
     # tree = ET.ElementTree(root)
     # tree.write(save_xml_path)
 
@@ -52,13 +52,11 @@ def create_file(file_prefix, width, height, voc_labels):
 
 def read_file(file_path):
     file_prefix = file_path.split(".txt")[0]
-    image_file_name = "{}.{}".format(file_prefix, imgext)
-    img = Image.open("{}/{}".format(imgpath, image_file_name))
-    print(img)
+    image_file_name = file_prefix + '.' + imgext
+    img = Image.open(osp.join(imgdirpath, image_file_name))
 
     w, h = img.size
-    prueba = "{}/{}".format(txtpath, file_path)
-    print(prueba)
+    prueba = osp.join(txtdirpath, file_path)
     with open(prueba) as file:
         lines = file.readlines()
         voc_labels = []
@@ -88,11 +86,11 @@ if __name__ == "__main__":
     imgext = 'jpg'
     datasetpath = osp.join(
         osp.dirname(__file__), "..", "dataset")
-    xmlpath = osp.join(
+    xmldirpath = osp.join(
         datasetpath, "xml")
-    imgpath = osp.join(
+    imgdirpath = osp.join(
         datasetpath, imgext)
-    txtpath = osp.join(
+    txtdirpath = osp.join(
         datasetpath, "txt")
     classes_txt_path = osp.join(
         datasetpath, "class_list.txt")
@@ -101,13 +99,11 @@ if __name__ == "__main__":
         with open(classes_txt_path, "r") as f:
             class_list = f.read().strip().split()
             classes = {str(k): v for (k, v) in enumerate(class_list)}
-    os.makedirs(xmlpath, exist_ok=True)
-    for filename in os.listdir(txtpath):
+    os.makedirs(xmldirpath, exist_ok=True)
+    for filename in os.listdir(txtdirpath):
         if filename.endswith('txt'):
-            PathFileName = "{}/{}".format(txtpath, filename)
-            print(PathFileName)
+            PathFileName = osp.join(txtdirpath, filename)
             if os.stat(PathFileName).st_size > 0:
-                print(filename)
                 read_file(filename)
         else:
             print("Skipping file: {}".format(filename))
