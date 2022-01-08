@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+ <filename>29.jpg</filename>
+ <size>
+  <width>1280</width>
+  <height>720</height>
+  <depth>3</depth>
+ </size>
+ <object>
+  <name>PlasticBottle</name>
+  <pose>Unspecified</pose>
+  <truncated>0</truncated>
+  <difficult>0</difficult>
+  <bndbox>
+   <xmin>8</xmin>
+   <ymin>136</ymin>
+   <xmax>279</xmax>
+   <ymax>327</ymax>
+  </bndbox>
+ </object>
+</annotations>

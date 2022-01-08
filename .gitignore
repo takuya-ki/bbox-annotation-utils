@@ -1,0 +1,7 @@
+/dataset/*
+!/dataset/class_list.txt
+!/dataset/txt
+!/dataset/xml
+!/dataset/jpg
+!/dataset/png
+!/dataset/result
