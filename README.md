@@ -25,7 +25,7 @@ Tools for bounding box annotations
     - check dataset/txt generated
 5. save annotated images into dataset/img/ and draw them 
     - `$ python src/draw_xml_annotation.py`
-    - `$ python src/draw_txt_annotation.py` (under dev)
+    - `$ python src/draw_txt_annotation.py`
 
 ## Author / Contributor
 

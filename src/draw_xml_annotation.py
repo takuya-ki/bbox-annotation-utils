@@ -50,7 +50,7 @@ class annotation_xml(object):
         return label_names, bounding_boxes
 
 
-def draw_annotation(imgpath, xmlpath, is_save=True):
+def draw_xml_annotation(imgpath, xmlpath, is_save=True):
     img = cv2.imread(imgpath)
     if not osp.isfile(xmlpath):
         print(xmlpath + " is not existed.")
@@ -75,9 +75,9 @@ def draw_annotation(imgpath, xmlpath, is_save=True):
             lab = 'Glass bottle'
 
         bb = [int(i) for i in bb]
-        text_pos = (bb[0], bb[1] - 10)
+        txtpos = (bb[0], bb[1] - 10)
         cv2.putText(
-            img, lab, text_pos, cv2.FONT_HERSHEY_PLAIN, 3.5, c, 5)
+            img, lab, txtpos, cv2.FONT_HERSHEY_PLAIN, 3.5, c, 5)
         cv2.rectangle(img, (bb[2], bb[3]), (bb[0], bb[1]), c, 2)
         cv2.circle(img, (bb[2], bb[3]), 10, c, -1)
         cv2.circle(img, (bb[0], bb[3]), 10, c, -1)
@@ -87,7 +87,7 @@ def draw_annotation(imgpath, xmlpath, is_save=True):
     cv2.imshow("drawed", scale_to_width(img, 1000))
     if is_save:
         dirpath, imgname = osp.split(imgpath)
-        outdirpath = osp.join(dirpath, 'result')
+        outdirpath = osp.join(dirpath, 'result_from_xml')
         os.makedirs(outdirpath, exist_ok=True)  # generate output directory
         cv2.imwrite(osp.join(outdirpath, imgname), img)
     if cv2.waitKey(0) & 0xff == 27:
@@ -108,6 +108,6 @@ if __name__ == '__main__':
     for imgpath, imgname in zip(imgpaths, imgnames):
         xmlpath = osp.join(xmldirpath, imgname+'.xml')
         if os.stat(xmlpath).st_size > 0:  # not empty xml
-            draw_annotation(imgpath=imgpath, xmlpath=xmlpath)
+            draw_xml_annotation(imgpath, xmlpath)
         else:
             print("Skipping file (empty xml file): {}".format(xmlpath))

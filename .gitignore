@@ -9,6 +9,6 @@
 /dataset/xml/*
 !/dataset/jpg
 !/dataset/png
-!/dataset/result
-/dataset/result/*
+/dataset/*/result_from_txt
+/dataset/*/result_from_xml
 !/dataset/sample
