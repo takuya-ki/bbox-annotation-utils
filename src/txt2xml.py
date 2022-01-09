@@ -7,6 +7,8 @@ from math import floor
 import xml.dom.minidom as minidom
 import xml.etree.cElementTree as ET
 
+from utils import get_file_paths
+
 
 def generate_xml(imgname, width, height, ch, voc_labels, xmlpath):
     # create root
@@ -76,20 +78,20 @@ if __name__ == "__main__":
     classes_txt_path = osp.join(
         datasetpath, "class_list.txt")
 
-    if osp.isfile(classes_txt_path):
-        with open(classes_txt_path, "r") as f:
-            class_list = f.read().strip().split()
-            classes = {str(k): v for (k, v) in enumerate(class_list)}
+    if not osp.isfile(classes_txt_path):
+        print("Check class list file: {}".format(classes_txt_path))
+        exit()
+    with open(classes_txt_path, "r") as f:
+        class_list = f.read().strip().split()
+        classes = {str(k): v for (k, v) in enumerate(class_list)}
     os.makedirs(xmldirpath, exist_ok=True)  # generate output directory
 
-    for txtname in os.listdir(txtdirpath):
-        if txtname.endswith('txt'):
-            txtpath = osp.join(txtdirpath, txtname)
-            if os.stat(txtpath).st_size > 0:  # not empty txt
-                txt_prefix = txtname.split(".txt")[0]
-                imgname = txt_prefix + '.' + imgext
-                imgpath = osp.join(imgdirpath, imgname)
-                xmlpath = osp.join(xmldirpath, txt_prefix + ".xml")
-                txt2xml(txtpath, imgpath, classes, xmlpath)
+    txtpaths, txtnames = get_file_paths(txtdirpath, 'txt')
+    for txtpath, txtname in zip(txtpaths, txtnames):
+        if os.stat(txtpath).st_size > 0:  # not empty txt
+            imgname = txtname + '.' + imgext
+            imgpath = osp.join(imgdirpath, imgname)
+            xmlpath = osp.join(xmldirpath, txtname + ".xml")
+            txt2xml(txtpath, imgpath, classes, xmlpath)
         else:
-            print("Skipping file: {}".format(txtname))
+            print("Skipping file (empty file): {}".format(txtpath))

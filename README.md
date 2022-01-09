@@ -10,16 +10,22 @@ Tools for bounding box annotations
 
 ## Installation
 
-    $ git clone git@github.com:takuya-ki/bbox-annotation-utils.git  
+    $ git clone git@github.com:takuya-ki/bbox-annotation-utils.git; cd bbox-annotation-utils  
     $ pip install -r requirements.txt
 
 ## Usage
 
-1. Prepare dataset/class_list.txt  
-2. Put annotation txt files into dataset/txt/ (e.g. txt files used for YOLO)  
-    `$ python src/txt2xml.py`  
-3. or put annotation xml files into dataset/xml/ (e.g. txt files used for SSD)  
-    `$ python src/xml2txt.py`
+1. prepare dataset/class_list.txt 
+2. save image files (extension is jpg or png) into dataset/jpg/ or dataset/png/
+3. save annotation txt files into dataset/txt/ (e.g. txt files used for YOLO)  
+    - `$ python src/txt2xml.py`  
+    - check dataset/xml generated
+4. or save annotation xml files into dataset/xml/ (e.g. txt files used for SSD)  
+    - `$ python src/xml2txt.py`
+    - check dataset/txt generated
+5. save annotated images into dataset/img/ and draw them 
+    - `$ python src/draw_xml_annotation.py`
+    - `$ python src/draw_txt_annotation.py` (under dev)
 
 ## Author / Contributor
 

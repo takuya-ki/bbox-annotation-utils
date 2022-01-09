@@ -8,6 +8,8 @@ from lxml import etree
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element, SubElement
 
+from utils import get_file_paths
+
 
 class PascalVocReader:
     def __init__(self, filepath):
@@ -94,20 +96,20 @@ if __name__ == '__main__':
     classes_txt_path = osp.join(
         datasetpath, "class_list.txt")
 
-    if osp.isfile(classes_txt_path):
-        with open(classes_txt_path, "r") as f:
-            class_list = f.read().strip().split()
-            classes = {k: v for (v, k) in enumerate(class_list)}
+    if not osp.isfile(classes_txt_path):
+        print("Check class list file: {}".format(classes_txt_path))
+        exit()
+    with open(classes_txt_path, "r") as f:
+        class_list = f.read().strip().split()
+        classes = {k: v for (v, k) in enumerate(class_list)}
     os.makedirs(txtdirpath, exist_ok=True)  # generate output directory
 
-    for xmlname in os.listdir(xmldirpath):
-        if xmlname.endswith('xml'):
-            xmlpath = osp.join(xmldirpath, xmlname)
-            if os.stat(xmlpath).st_size > 0:  # not empty xml
-                xml_prefix = xmlname.split(".xml")[0]
-                imgname = xml_prefix + '.' + imgext
-                imgpath = osp.join(imgdirpath, imgname)
-                txtpath = osp.join(txtdirpath, xml_prefix + ".txt")
-                xml2txt(xmlpath, imgpath, classes, txtpath)
+    xmlpaths, xmlnames = get_file_paths(xmldirpath, 'xml')
+    for xmlpath, xmlname in zip(xmlpaths, xmlnames):
+        if os.stat(xmlpath).st_size > 0:  # not empty xml
+            imgname = xmlname + '.' + imgext
+            imgpath = osp.join(imgdirpath, imgname)
+            txtpath = osp.join(txtdirpath, xmlname + ".txt")
+            xml2txt(xmlpath, imgpath, classes, txtpath)
         else:
-            print("Skipping file: {}".format(xmlname))
+            print("Skipping file (empty file): {}".format(xmlpath))

@@ -1,3 +1,6 @@
+*.vscode
+*__pycache__
+
 /dataset/*
 !/dataset/class_list.txt
 !/dataset/txt
@@ -7,4 +10,5 @@
 !/dataset/jpg
 !/dataset/png
 !/dataset/result
+/dataset/result/*
 !/dataset/sample
