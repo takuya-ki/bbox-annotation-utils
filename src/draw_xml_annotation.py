@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import cv2
+import numpy as np
 import os.path as osp
 from lxml import etree
 
@@ -50,7 +51,7 @@ class annotation_xml(object):
         return label_names, bounding_boxes
 
 
-def draw_xml_annotation(imgpath, xmlpath, is_save=True):
+def draw_xml_annotation(imgpath, xmlpath, colors, is_save=True):
     img = cv2.imread(imgpath)
     if not osp.isfile(xmlpath):
         print(xmlpath + " is not existed.")
@@ -59,21 +60,16 @@ def draw_xml_annotation(imgpath, xmlpath, is_save=True):
     anno_xml = annotation_xml(xmlpath)
     labels, bboxs = anno_xml.get_bbox(img.shape)
 
+    if not colors:
+        colors = dict()
+        for label in labels:
+            color = np.uint8(np.random.uniform(0, 255, 3))
+            c = tuple(map(int, color))
+            colors[label] = c
+
     # draw and view
     for i, (lab, bb) in enumerate(zip(labels, bboxs)):
-        # color = np.uint8(np.random.uniform(0, 255, 3))
-        # c = tuple(map(int, color))
-        # c = (255, 255, 255)
-        if lab == 'PlasticBottle':
-            c = (0, 255, 0)
-            lab = 'Plastic bottle'
-        elif lab == 'Can':
-            c = (255, 102, 153)
-            lab = 'Aluminum can'
-        elif lab == 'Bottle':
-            c = (0, 153, 255)
-            lab = 'Glass bottle'
-
+        c = colors[lab]
         bb = [int(i) for i in bb]
         txtpos = (bb[0], bb[1] - 10)
         cv2.putText(
@@ -96,9 +92,27 @@ def draw_xml_annotation(imgpath, xmlpath, is_save=True):
 
 if __name__ == '__main__':
 
-    imgext = 'jpg'
     datasetpath = osp.join(
         osp.dirname(__file__), "..", "dataset")
+    classes = dict()
+    classes_txt_path = osp.join(
+        datasetpath, "class_color_list.txt")
+    if not osp.isfile(classes_txt_path):
+        print("Check class list file: {}".format(classes_txt_path))
+        exit()
+    with open(classes_txt_path, "r") as f:
+        clist = f.read().strip().split()
+        classes = {k: str(v).split(',')[0] for (k, v) in enumerate(clist)}
+        colors = None
+        if len(clist[0].split(',')) > 1:
+            colors = {
+                str(v).split(',')[0]:
+                tuple((int(str(v).split(',')[1]),
+                       int(str(v).split(',')[2]),
+                       int(str(v).split(',')[3])))
+                for (k, v) in enumerate(clist)}
+
+    imgext = 'jpg'
     imgdirpath = osp.join(
         datasetpath, imgext)
     xmldirpath = osp.join(
@@ -108,6 +122,6 @@ if __name__ == '__main__':
     for imgpath, imgname in zip(imgpaths, imgnames):
         xmlpath = osp.join(xmldirpath, imgname+'.xml')
         if os.stat(xmlpath).st_size > 0:  # not empty xml
-            draw_xml_annotation(imgpath, xmlpath)
+            draw_xml_annotation(imgpath, xmlpath, colors)
         else:
             print("Skipping file (empty xml file): {}".format(xmlpath))

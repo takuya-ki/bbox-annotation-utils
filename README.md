@@ -6,6 +6,7 @@ Tools for bounding box annotations
 
 - Python 3.7.3
   - lxml 4.7.0
+  - numpy 1.21.5
   - opencv-python 4.5.1.48
 
 ## Installation

@@ -65,25 +65,25 @@ def txt2xml(txtpath, imgpath, classes, xmlpath):
 
 if __name__ == "__main__":
 
-    classes = dict()
-    imgext = 'jpg'
     datasetpath = osp.join(
         osp.dirname(__file__), "..", "dataset")
-    xmldirpath = osp.join(
-        datasetpath, "xml")
-    imgdirpath = osp.join(
-        datasetpath, imgext)
-    txtdirpath = osp.join(
-        datasetpath, "txt")
+    classes = dict()
     classes_txt_path = osp.join(
         datasetpath, "class_list.txt")
-
     if not osp.isfile(classes_txt_path):
         print("Check class list file: {}".format(classes_txt_path))
         exit()
     with open(classes_txt_path, "r") as f:
         class_list = f.read().strip().split()
-        classes = {str(k): v for (k, v) in enumerate(class_list)}
+        classes = {str(k): str(v).split(',')[0] for (k, v) in enumerate(class_list)}
+
+    imgext = 'jpg'
+    txtdirpath = osp.join(
+        datasetpath, "txt")
+    imgdirpath = osp.join(
+        datasetpath, imgext)
+    xmldirpath = osp.join(
+        datasetpath, "xml")
     os.makedirs(xmldirpath, exist_ok=True)  # generate output directory
 
     txtpaths, txtnames = get_file_paths(txtdirpath, 'txt')

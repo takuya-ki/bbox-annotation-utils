@@ -3,6 +3,7 @@
 
 /dataset/*
 !/dataset/class_list.txt
+!/dataset/class_color_list.txt
 !/dataset/txt
 /dataset/txt/*
 !/dataset/xml

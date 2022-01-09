@@ -1,0 +1,3 @@
+PlasticBottle,0,255,0
+Can,255,102,153
+Bottle,0,153,255
