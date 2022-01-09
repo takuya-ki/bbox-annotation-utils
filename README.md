@@ -1,6 +1,6 @@
 # bbox-annotation-utils
 
-Tools for annotation of 2d object detection.
+Tools for bounding box annotations
 
 ## Requirements
 
@@ -21,9 +21,13 @@ Tools for annotation of 2d object detection.
     `$ python src/txt2xml.py`  
 3. or put annotation xml files for SSD into dataset/xml/  
     `$ python src/xml2txt.py`
-4. Put annotated images into dataset/img/ and draw them with xml file  
+4. Put annotated images into dataset/img/ and draw them 
     `$ python src/draw_ssd_annotation.py`
 
-## Author
+## Author / Contributor
 
 [Takuya Kiyokawa](https://takuya-ki.github.io/)
+
+## License
+
+This software is released under the MIT License, see [LICENSE](./LICENSE).
