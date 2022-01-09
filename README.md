@@ -6,7 +6,6 @@ Tools for bounding box annotations
 
 - Python 3.7.3
   - lxml 4.7.0
-  - Pillow 8.4.0
   - opencv-python 4.5.1.48
 
 ## Installation
@@ -17,12 +16,10 @@ Tools for bounding box annotations
 ## Usage
 
 1. Prepare dataset/class_list.txt  
-2. Put annotation txt files for YOLO into dataset/txt/  
+2. Put annotation txt files into dataset/txt/ (e.g. txt files used for YOLO)  
     `$ python src/txt2xml.py`  
-3. or put annotation xml files for SSD into dataset/xml/  
+3. or put annotation xml files into dataset/xml/ (e.g. txt files used for SSD)  
     `$ python src/xml2txt.py`
-4. Put annotated images into dataset/img/ and draw them 
-    `$ python src/draw_ssd_annotation.py`
 
 ## Author / Contributor
 

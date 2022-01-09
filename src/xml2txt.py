@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from __future__ import print_function
-
 import os
 import cv2
 import glob
@@ -52,11 +50,38 @@ class PascalVocReader:
         return True
 
 
+def xml2txt(xmlpath, imgpath, classes, txtpath):
+    num_classes = 0
+    tVocParseReader = PascalVocReader(xmlpath)
+    shapes = tVocParseReader.getShapes()
+    with open(txtpath, "w") as f:
+        for shape in shapes:
+            class_name = shape[0]
+            box = shape[1]
+
+            if class_name not in classes.keys():
+                classes[class_name] = num_classes
+                num_classes += 1
+            class_idx = classes[class_name]
+
+            (height, width, _) = cv2.imread(imgpath).shape
+
+            coord_min = box[0]
+            coord_max = box[2]
+
+            xcen = float((coord_min[0] + coord_max[0])) / 2 / width
+            ycen = float((coord_min[1] + coord_max[1])) / 2 / height
+            w = float((coord_max[0] - coord_min[0])) / width
+            h = float((coord_max[1] - coord_min[1])) / height
+
+            f.write("%d %.06f %.06f %.06f %.06f\n"
+                    % (class_idx, xcen, ycen, w, h))
+    print("Processing complete for file: {}".format(xmlpath))
+
+
 if __name__ == '__main__':
 
     classes = dict()
-    num_classes = 0
-
     imgext = 'jpg'
     datasetpath = osp.join(
         osp.dirname(__file__), "..", "dataset")
@@ -73,40 +98,16 @@ if __name__ == '__main__':
         with open(classes_txt_path, "r") as f:
             class_list = f.read().strip().split()
             classes = {k: v for (v, k) in enumerate(class_list)}
-    os.makedirs(txtdirpath, exist_ok=True)
+    os.makedirs(txtdirpath, exist_ok=True)  # generate output directory
 
-    xmlPaths = glob.glob(osp.join(xmldirpath, "*.xml"))
-    for xmlPath in xmlPaths:
-        tVocParseReader = PascalVocReader(xmlPath)
-        shapes = tVocParseReader.getShapes()
-        txtpath = osp.join(txtdirpath, osp.basename(xmlPath)[:-4] + ".txt")
-        with open(txtpath, "w") as f:
-            for shape in shapes:
-                class_name = shape[0]
-                box = shape[1]
-                filename = osp.splitext(osp.join(
-                    imgdirpath,
-                    osp.basename(xmlPath)[:-4]))[0] + '.' + imgext
-
-                if class_name not in classes.keys():
-                    classes[class_name] = num_classes
-                    num_classes += 1
-                class_idx = classes[class_name]
-
-                (height, width, _) = cv2.imread(filename).shape
-
-                coord_min = box[0]
-                coord_max = box[2]
-
-                xcen = float((coord_min[0] + coord_max[0])) / 2 / width
-                ycen = float((coord_min[1] + coord_max[1])) / 2 / height
-                w = float((coord_max[0] - coord_min[0])) / width
-                h = float((coord_max[1] - coord_min[1])) / height
-
-                f.write("%d %.06f %.06f %.06f %.06f\n"
-                        % (class_idx, xcen, ycen, w, h))
-
-    with open(osp.join(datasetpath, "class_found.txt"), "w") as f:
-        for key in classes.keys():
-            f.write("%s\n" % key)
-            print(key)
+    for xmlname in os.listdir(xmldirpath):
+        if xmlname.endswith('xml'):
+            xmlpath = osp.join(xmldirpath, xmlname)
+            if os.stat(xmlpath).st_size > 0:  # not empty xml
+                xml_prefix = xmlname.split(".xml")[0]
+                imgname = xml_prefix + '.' + imgext
+                imgpath = osp.join(imgdirpath, imgname)
+                txtpath = osp.join(txtdirpath, xml_prefix + ".txt")
+                xml2txt(xmlpath, imgpath, classes, txtpath)
+        else:
+            print("Skipping file: {}".format(xmlname))
