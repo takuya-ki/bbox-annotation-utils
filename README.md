@@ -15,8 +15,7 @@ Tools for bounding box annotations
 ## Installation
 
 ```bash
-git clone git@github.com:takuya-ki/bbox-annotation-utils.git; cd bbox-annotation-utils  
-pip install -r requirements.txt
+git clone git@github.com:takuya-ki/bbox-annotation-utils.git && cd bbox-annotation-utils && pip install -r requirements.txt
 ```
 
 ## Usage
